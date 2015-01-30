@@ -78,6 +78,10 @@ function Maze:draw()
 
   love.graphics.setColor(226,234,92)
   local q = Vector(self.player.x, self.player.y - 100)
+
+
+  -- HD STYLE
+  --[[
   for i = 0, width do
     local angle = self.player.angle - self.player.fov/2 + self.player.fov/width * i
     angle = angle * (math.pi/180)
@@ -91,18 +95,49 @@ function Maze:draw()
     end
     local lineHeight = height/ray:getLenght();
     local startY = height/2 - lineHeight/2;
-    love.graphics.line(i,startY, i, startY+lineHeight)
+    
+    love.graphics.line(i,startY, i, startY+lineHeight)  
   end
-  
-  --love.graphics.setColor(0, 255, 255)
-  --for i = 1, #self.segments do self.segments[i]:draw(15) end
-  --[[local angle
-  for angle = 0, math.pi, 0.1 do
-    local rX = math.cos(angle) * (self.r2.x - self.r1.x) - math.sin(angle) * (self.r2.y - self.r1.y) + self.r1.x
-    local rY = math.sin(angle) * (self.r2.x - self.r1.x) + math.cos(angle) * (self.r2.y - self.r1.y) + self.r1.y
-    local ray = self:raycast(Segment(self.r1,Vector(rX,rY)))
-    ray:draw(15)
-  end]]
+  --]]
+
+  --RETRO STYLE
+  --
+  love.graphics.setColor(226,234,92)
+  local q = Vector(self.player.x, self.player.y - 100)
+  local drawWidth = 100
+  for i = 0, drawWidth do
+    local angle = self.player.angle - self.player.fov/2 + self.player.fov/drawWidth * i
+    angle = angle * (math.pi/180)
+    local rX = math.cos(angle) * (q.x - self.player.x) - math.sin(angle) * (q.y - self.player.y) + self.player.x
+    local rY = math.sin(angle) * (q.x - self.player.x) + math.cos(angle) * (q.y - self.player.y) + self.player.y
+    local ray = self:raycast(Segment(Vector(self.player.x, self.player.y),Vector(rX,rY)))
+    if (ray.color == "n") then love.graphics.setColor(255,0,0)
+    elseif (ray.color == "s") then love.graphics.setColor(0,255,0)
+    elseif (ray.color == "w") then love.graphics.setColor(0,0,255)
+    elseif (ray.color == "e") then love.graphics.setColor(255,255,0)
+    end
+    local lineHeight = height/ray:getLenght();
+    local startY = height/2 - lineHeight/2;
+    love.graphics.rectangle("fill",i*width/drawWidth,startY,width/drawWidth,lineHeight)
+    --love.graphics.line(i,startY, i, startY+lineHeight)  
+  end
+  --]]
+
+  love.graphics.setColor(20,20,20)
+  love.graphics.rectangle("fill",0,0,200,200)
+  love.graphics.setColor(0, 255, 255)
+
+  for i = 1, #self.segments do self.segments[i]:draw(10) end
+  love.graphics.setColor(100, 20, 255)
+  local q = Vector(self.player.x, self.player.y - 100)
+  for i = 0, 100 do
+    local angle = self.player.angle - self.player.fov/2 + self.player.fov/100 * i
+    angle = angle * (math.pi/180)
+    local rX = math.cos(angle) * (q.x - self.player.x) - math.sin(angle) * (q.y - self.player.y) + self.player.x
+    local rY = math.sin(angle) * (q.x - self.player.x) + math.cos(angle) * (q.y - self.player.y) + self.player.y
+    local ray = self:raycast(Segment(Vector(self.player.x, self.player.y),Vector(rX,rY)))
+    ray:draw(10)
+  end
 end
 
 function Maze:checkPoint(x, y)
